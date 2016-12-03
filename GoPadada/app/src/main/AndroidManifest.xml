@@ -8,6 +8,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="clientid" android:value="44250bab7ce4b8466681ee186f911bcb46e6164c" />
+        <meta-data android:name="secret" android:value="70dd88b78f6e57f90714a7ee391060945ef36b7a" />
+        <provider
+            android:authorities="gopadada.com"
+            android:name="com.onyxbeaconservice.provider.IBeaconProvider"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
+        <receiver android:name=".receivers.ContentReceiver">
+            <intent-filter>
+                <action android:name="gopadada.com" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
