@@ -57,12 +57,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="padada.com.receivers.BleStateReceiver">
-            <intent-filter>
-                <action android:name="padada.com.scan" />
-            </intent-filter>
-        </receiver>
-
         <provider
             android:authorities="padada.com.provider"
             android:name="com.onyxbeaconservice.provider.IBeaconProvider"

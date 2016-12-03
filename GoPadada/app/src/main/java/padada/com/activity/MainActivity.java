@@ -4,7 +4,6 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +16,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -32,31 +30,17 @@ import java.util.List;
 
 import padada.com.R;
 import padada.com.fragments.BeaconFragment;
-import padada.com.listener.BleStateListener;
-import padada.com.receivers.BleStateReceiver;
 import padada.com.receivers.ContentReceiver;
 
-
-
-
 public class MainActivity extends AppCompatActivity implements
-        BleStateListener, ActivityCompat.OnRequestPermissionsResultCallback {
-
-public static final String EXTRA_COUPONS = "coupons";
+        ActivityCompat.OnRequestPermissionsResultCallback {
     public static final String TAG = "MainActivity";
     private static final int REQUEST_FINE_LOCATION = 0;
-
-    /**
-     * Permissions required to read and write contacts. Used by the {@link com.onyxbeacon.service.location.LocationManager}.
-     */
-    private static String[] PERMISSIONS_CONTACT = {Manifest.permission.ACCESS_FINE_LOCATION};
     //Misc
     // This is the project number you got from the API Console
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    //private MFPPush push;
-    //private MFPPushNotificationListener notificationListener;
 
     /**
      * Root of the layout of this Activity.
@@ -65,11 +49,8 @@ public static final String EXTRA_COUPONS = "coupons";
     // OnyxBeacon SDK
     private OnyxBeaconManager mManager;
     private String CONTENT_INTENT_FILTER;
-    private String BLE_INTENT_FILTER;
     private ContentReceiver mContentReceiver;
-    private BleStateReceiver mBleReceiver;
     private boolean receiverRegistered = false;
-    private boolean bleStateRegistered = false;
 
     /**
      * Called when the 'show camera' button is clicked.
@@ -149,9 +130,6 @@ public static final String EXTRA_COUPONS = "coupons";
 
     public void onResume() {
         super.onResume();
-
-        if (mBleReceiver == null) mBleReceiver = BleStateReceiver.getInstance();
-
         if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
 
         registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
@@ -178,21 +156,10 @@ public static final String EXTRA_COUPONS = "coupons";
         // Set scanner in background mode
         mManager.setForegroundMode(false);
 
-        if (bleStateRegistered) {
-            unregisterReceiver(mBleReceiver);
-            bleStateRegistered = false;
-        }
-
         if (receiverRegistered) {
             unregisterReceiver(mContentReceiver);
             receiverRegistered = false;
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
     }
 
     /* Enable bluetooth button */
@@ -205,23 +172,6 @@ public static final String EXTRA_COUPONS = "coupons";
                 break;
         }
         return true;
-    }
-
-    @Override
-    public void onBleStackEvent(int event) {
-        System.out.println(event);
-        switch (event) {
-            case 1:
-                Snackbar snackBar = Snackbar.make(mLayout, "Probably your bluetooth stack has crashed. Please restart your bluetooth.", Snackbar.LENGTH_LONG);
-                snackBar.setActionTextColor(Color.RED);
-                snackBar.show();
-                break;
-            case 2:
-                Snackbar snackBarrssi = Snackbar.make(mLayout, "Beacons with invalid RSSI detected. Please restart your bluetooth.", Snackbar.LENGTH_LONG);
-                snackBarrssi.setActionTextColor(Color.GREEN);
-                snackBarrssi.show();
-                break;
-        }
     }
 
     @Override
@@ -253,16 +203,6 @@ public static final String EXTRA_COUPONS = "coupons";
     }
 
     public void registerForOnyxContent() {
-
-        //Register for BLE events
-        mBleReceiver = BleStateReceiver.getInstance();
-        mBleReceiver.setBleStateListener(this);
-
-
-        BLE_INTENT_FILTER = getPackageName() + ".scan";
-        registerReceiver(mBleReceiver, new IntentFilter(BLE_INTENT_FILTER));
-        bleStateRegistered = true;
-
         CONTENT_INTENT_FILTER = getPackageName() + ".content";
         registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
         receiverRegistered = true;

@@ -21,17 +21,11 @@ public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
     private ListView mListView;
     private Activity mFragmentActivity;
     public BeaconAdapter mBeaconAdapter;
-
-    /*
-     SDK contents: coupons, beacons, tags are received
-     via BroadcastReceiver
-     */
     private ContentReceiver mContentReceiver;
 
     public BeaconFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
