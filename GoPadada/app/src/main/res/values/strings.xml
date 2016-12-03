@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">GoPadada</string>
+    <string name="app_name">Padada</string>
+    <string name="coupon_button">Coupon Demo</string>
+    <string name="bluetooth_button">Turn on bluetooth</string>
+    <string name="custom_button">Custom demo</string>
+    <string name="facebook_app_id">778648625509638</string>
+    <string name="onyx_service_notification_title">Stay connected from app test</string>
+    <string name="onyx_service_notification_description">Looking for nearby beacons from app test</string>
+    <string name="provider_authority">.res-auto.IBeaconProvider</string>
 </resources>
