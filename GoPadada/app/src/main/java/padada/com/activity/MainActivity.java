@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.onyxbeacon.OnyxBeaconApplication;
@@ -44,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements
      * Root of the layout of this Activity.
      */
     private View mLayout;
-
     // OnyxBeacon SDK
     private OnyxBeaconManager mManager;
     private String CONTENT_INTENT_FILTER;
@@ -158,6 +159,46 @@ public class MainActivity extends AppCompatActivity implements
         if (receiverRegistered) {
             unregisterReceiver(mContentReceiver);
             receiverRegistered = false;
+        }
+    }
+
+    /* Enable bluetooth button */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_bluetooth:
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_FINE_LOCATION: {
+                // Check if the only required permission has been granted
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        // Location permission has been granted, preview can be displayed
+                        android.util.Log.i(TAG, "LOCATION permission has now been granted.");
+                        Snackbar.make(mLayout, "Location Permission has been granted.",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        android.util.Log.i(TAG, "LOCATION permission was NOT granted.");
+                        Snackbar.make(mLayout, "Permissions were not granted",
+                                Snackbar.LENGTH_SHORT).show();
+
+                    }
+                }
+            }
+            break;
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
         }
     }
 
