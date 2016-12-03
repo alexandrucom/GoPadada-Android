@@ -1,1 +1,1 @@
-include ':app', ':OnyxBeaconLibrary'
+include ':app'
