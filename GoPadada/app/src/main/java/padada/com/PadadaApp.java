@@ -3,6 +3,7 @@ package padada.com;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
+import com.facebook.FacebookSdk;
 import com.parse.Parse;
 
 /**
@@ -22,5 +23,7 @@ public class PadadaApp extends Application {
 				getResources().getString(R.string.parse_application_id),
 				getResources().getString(R.string.parse_client_id)
 		);
+
+		FacebookSdk.sdkInitialize(getApplicationContext());
 	}
 }

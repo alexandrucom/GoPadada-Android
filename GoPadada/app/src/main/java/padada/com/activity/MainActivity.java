@@ -213,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		tabLayout = (TabLayout) findViewById(R.id.tabs);
 		tabLayout.setupWithViewPager(viewPager);
 
-
 	}
 
 	class ViewPagerAdapter extends FragmentPagerAdapter {

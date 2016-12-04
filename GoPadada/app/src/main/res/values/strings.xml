@@ -1,26 +1,14 @@
 <resources>
     <string name="app_name">Padada</string>
-    <string name="coupon_button">Coupon Demo</string>
-    <string name="bluetooth_button">Turn on bluetooth</string>
-    <string name="custom_button">Custom demo</string>
-    <string name="facebook_app_id">778648625509638</string>
-    <string name="onyx_service_notification_title">Stay connected from app test</string>
-    <string name="onyx_service_notification_description">Looking for nearby beacons from app test</string>
+    <string name="facebook_app_id">1100973460012577</string>
     <string name="provider_authority">.res-auto.IBeaconProvider</string>
 
 
     <string name="parse_application_id" translatable="false">Fk0VzYiaOcwOPa7CyMpO1yZrxJzorJCP9QzPKMjV</string>
     <string name="parse_client_id" translatable="false">acv5IpLUE9DiFJSgDPKZMmlG7eLEkqqfJi3wPqkg</string>
     <string name="parse_api_key" translatable="false">CqmgVWIGEpRhL9WeMTygUv9itlhNul2MFby5oWKm</string>
-<<<<<<< HEAD
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
-=======
     <string name="notification_title">Transport</string>
     <string name="enter_bus">Enter Bus</string>
     <string name="exit_bus">Exit Bus</string>
->>>>>>> ad51b9501472d27fcccc34aef3e56bc1840fef3c
 </resources>
