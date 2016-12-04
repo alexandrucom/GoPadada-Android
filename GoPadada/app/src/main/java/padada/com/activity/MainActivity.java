@@ -2,6 +2,7 @@ package padada.com.activity;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -261,4 +262,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		viewPager.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						displayLeveUp(2);
+					}
+				});
+			}
+		}, 2000);
+	}
 }
