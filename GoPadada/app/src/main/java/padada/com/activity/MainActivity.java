@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 		new MaterialDialog.Builder(this)
 				.title("Level up!")
-				.content("Congrats! You level up, ...a;dlfkja df;lkjasd")
-				.positiveText("Okay")
+				.content("Congrats! You leveled up, claim your prize!")
+				.positiveText("Claim")
 				.icon(getResources().getDrawable(R.drawable.medal))
 				.show();
 
@@ -282,4 +282,5 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 			}
 		}, 2000);
 	}
+
 }
