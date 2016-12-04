@@ -1,8 +1,8 @@
 package padada.com.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import padada.com.R;
+import padada.com.activity.PaimentActivity;
 import padada.com.dal.ApiResult;
 import padada.com.dal.PadadaApiClient;
 import padada.com.model.Promotion;
@@ -31,7 +32,6 @@ public class MainFragment extends Fragment {
 		// Required empty public constructor
 	}
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
@@ -39,7 +39,7 @@ public class MainFragment extends Fragment {
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mPadadaApiClient = new PadadaApiClient(getActivity());
@@ -57,12 +57,19 @@ public class MainFragment extends Fragment {
 		});
 	}
 
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		initViews(view);
 	}
 
 	private void initViews(View view) {
 		mCiProfile = (CircleImageView) view.findViewById(R.id.ci_profile);
+		mCiProfile.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(getActivity(), PaimentActivity.class), 567);
+			}
+		});
 	}
+
 }
