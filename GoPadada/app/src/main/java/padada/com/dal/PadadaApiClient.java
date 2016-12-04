@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import padada.com.R;
 import padada.com.model.Customer;
+import padada.com.model.Ride;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -79,6 +80,20 @@ public class PadadaApiClient {
 		void register(
 				@Field("installationId") String installationId,
 				Callback<ApiResult<Customer>> callback
+		);
+
+		@FormUrlEncoded
+		@POST("/1/functions/startRide")
+		void startRide(
+				@Field("customerId") String customerId,
+				Callback<ApiResult<Ride>> callback
+		);
+
+		@FormUrlEncoded
+		@POST("/1/functions/endRide")
+		void endRide(
+				@Field("customerId") String customerId,
+				Callback<ApiResult<Ride>> callback
 		);
 
 	}
