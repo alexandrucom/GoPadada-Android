@@ -4,6 +4,8 @@ package padada.com.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ public class MainFragment extends Fragment {
 
 	private PadadaApiClient mPadadaApiClient;
 	private List<Promotion> mPromotionList;
+	private RecyclerView mRecyclerView;
 
 	private CircleImageView mCiProfile;
 
@@ -38,6 +41,7 @@ public class MainFragment extends Fragment {
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +52,9 @@ public class MainFragment extends Fragment {
 			@Override
 			public void success(ApiResult<List<Promotion>> listApiResult, Response response) {
 				mPromotionList = listApiResult.getResult();
+				PromotionAdapter promotionAdapter = new PromotionAdapter(getContext(), listApiResult.getResult());
+				mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+				mRecyclerView.setAdapter(promotionAdapter);
 			}
 
 			@Override
@@ -64,5 +71,6 @@ public class MainFragment extends Fragment {
 
 	private void initViews(View view) {
 		mCiProfile = (CircleImageView) view.findViewById(R.id.ci_profile);
+		mRecyclerView = (RecyclerView)  view.findViewById(R.id.recycler_promotion);
 	}
 }
