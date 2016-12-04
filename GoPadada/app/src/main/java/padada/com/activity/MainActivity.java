@@ -21,6 +21,7 @@ import android.view.View;
 
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
+import com.onyxbeacon.listeners.OnyxBeaconsListener;
 import com.onyxbeacon.rest.auth.util.AuthData;
 import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
@@ -34,7 +35,9 @@ import padada.com.dal.ApiResult;
 import padada.com.fragments.HistoryFragment;
 import padada.com.fragments.LeaderboardsFragment;
 import padada.com.fragments.MainFragment;
+import padada.com.fragments.RideNotification;
 import padada.com.managers.AccountManager;
+import padada.com.managers.BeaconManager;
 import padada.com.managers.SharedPrefsManager;
 import padada.com.model.Customer;
 import padada.com.receivers.ContentReceiver;
@@ -88,15 +91,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		initUI();
 		registerForOnyxContent();
 		enableLocation();
+
+		if (mContentReceiver == null) {
+			mContentReceiver = ContentReceiver.getInstance();
+		}
+		mContentReceiver.setBeaconProximityListener(mBeaconProximityListener);
+
 	}
 
 	public void onResume() {
 		super.onResume();
-		if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
+		if (mContentReceiver == null) {
+			mContentReceiver = ContentReceiver.getInstance();
+		}
 
 		registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
 		receiverRegistered = true;
-
 
 		if (BluetoothAdapter.getDefaultAdapter() == null) {
 			Snackbar.make(mLayout, "Device does not support Bluetooth", Snackbar.LENGTH_SHORT).show();
@@ -151,9 +161,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 	private void setupViewPager(ViewPager viewPager) {
 		ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HistoryFragment(), "Rides");
-        adapter.addFragment(new MainFragment(), "Profile");
-        adapter.addFragment(new LeaderboardsFragment(), "Leaderboard");
+		adapter.addFragment(new HistoryFragment(), "Rides");
+		adapter.addFragment(new MainFragment(), "Profile");
+		adapter.addFragment(new LeaderboardsFragment(), "Leaderboard");
 		viewPager.setAdapter(adapter);
 	}
 
@@ -243,5 +253,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 			return mFragmentTitleList.get(position);
 		}
 	}
+
+	BeaconManager.BeaconProximityListener mBeaconProximityListener = new BeaconManager.BeaconProximityListener() {
+		@Override
+		public void onStateChanged(BeaconManager.CustomerState customerState) {
+			Log.i(TAG, "onStateChanged: " + customerState.name());
+//			RideNotification.rideNotification(MainActivity.this, );
+		}
+	};
 
 }
