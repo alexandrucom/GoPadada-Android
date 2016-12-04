@@ -60,6 +60,6 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/bbtn_round"
         android:text="PAY TICKET"
-        android:textColor="#4e4e4e"/>
+        android:textColor="@color/colorBlack"/>
 
 </RelativeLayout>
