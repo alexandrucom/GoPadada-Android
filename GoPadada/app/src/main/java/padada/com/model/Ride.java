@@ -3,16 +3,14 @@ package padada.com.model;
 public class Ride {
 
 	private String objectId;
-	private Customer customer;
 	private String vehicleName;
 	private String vehicleType;
 	private String routeName;
 	private long startedAt;
 	private long endedAt;
 
-	public Ride(String objectId, Customer customer, String vehicleName, String vehicleType, String routeName, long startedAt, long endedAt) {
+	public Ride(String objectId, String vehicleName, String vehicleType, String routeName, long startedAt, long endedAt) {
 		this.objectId = objectId;
-		this.customer = customer;
 		this.vehicleName = vehicleName;
 		this.vehicleType = vehicleType;
 		this.routeName = routeName;
@@ -22,10 +20,6 @@ public class Ride {
 
 	public String getObjectId() {
 		return objectId;
-	}
-
-	public Customer getCustomer() {
-		return customer;
 	}
 
 	public String getVehicleName() {
