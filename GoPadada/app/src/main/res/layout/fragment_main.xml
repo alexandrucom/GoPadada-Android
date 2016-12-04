@@ -3,7 +3,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:background="@drawable/profile_bg"
+        android:background="@drawable/bg_profile"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_profile"
         android:layout_alignParentTop="true"
@@ -12,7 +12,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ci_profile"
-            android:src="@drawable/ic_app_logo"
+            android:src="@drawable/img_profile"
             android:layout_width="@dimen/profile_dim"
             android:layout_height="@dimen/profile_dim"
             android:layout_centerHorizontal="true"
@@ -26,16 +26,17 @@
             android:layout_marginTop="@dimen/margin_small"
             android:gravity="center"
             android:text="David Nagy"
-            android:textColor="@color/colorGrayDark"
+            android:textColor="@color/colorWhile"
             android:textSize="@dimen/text_size_medium" />
 
         <TextView
             android:id="@+id/tv_points"
             android:layout_below="@id/tv_name"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorGrayDark"
+            android:text="243/555 Points"
+            android:textColor="@color/colorWhile"
             android:textSize="@dimen/text_size_small" />
     </RelativeLayout>
-
 </RelativeLayout>
