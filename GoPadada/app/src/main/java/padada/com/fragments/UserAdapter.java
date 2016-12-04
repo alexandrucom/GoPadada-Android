@@ -5,13 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import padada.com.R;
 import padada.com.model.User;
 
@@ -49,22 +49,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.RideViewHolder
 		private TextView txtUsername;
 		private TextView txtLevel;
 		private TextView txtPoints;
-		private ImageView imgAvatar;
+		private CircleImageView imgAvatar;
 
 		public RideViewHolder(View itemView) {
 			super(itemView);
 			txtUsername = (TextView) itemView.findViewById(R.id.txt_username);
 			txtLevel = (TextView) itemView.findViewById(R.id.txt_level);
 			txtPoints = (TextView) itemView.findViewById(R.id.txt_points);
-			imgAvatar = (ImageView) itemView.findViewById(R.id.img_avatar);
+			imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar);
 		}
 
 		private void bindUser(User user) {
 			txtUsername.setText(user.getUsername());
-			txtLevel.setText(String.valueOf(user.getLevel()));
-			txtPoints.setText(String.valueOf(user.getPoints()));
+			txtLevel.setText("Level: " + String.valueOf(user.getLevel()));
+			txtPoints.setText("Points: " + String.valueOf(user.getPoints()));
 			Picasso.with(mContext).load(user.getProfilePhotoUrl()).into(imgAvatar);
 		}
 
 	}
+
 }

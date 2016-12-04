@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.listeners.OnyxBeaconsListener;
@@ -248,6 +249,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 	@Override
 	public void didRangeBeaconsInRegion(final List<Beacon> beacons) {
 		mRideHandler.rideHandler(beacons);
+	}
+
+	public void displayLeveUp(int newLevel) {
+
+		new MaterialDialog.Builder(this)
+				.title("Level up!")
+				.content("Congrats! You level up, ...a;dlfkja df;lkjasd")
+				.positiveText("Okay")
+				.icon(getDrawable(R.drawable.medal))
+				.show();
+
 	}
 
 }
