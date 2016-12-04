@@ -9,6 +9,7 @@ import com.onyxbeaconservice.IBeacon;
 import java.util.ArrayList;
 import java.util.List;
 
+import padada.com.R;
 import padada.com.dal.ApiResult;
 import padada.com.managers.RideManager;
 import padada.com.model.Ride;
@@ -29,10 +30,12 @@ public class RideHandler {
     private List<IBeacon> beaconList;
     private boolean enterBus;
     private RideManager mRideManager;
+    private Context mContext;
 
     public RideHandler(Context context) {
         beaconList = new ArrayList<>();
         mRideManager = new RideManager(context);
+        mContext = context;
     }
 
     public void rideHandler(List<Beacon> beacons) {
@@ -71,12 +74,14 @@ public class RideHandler {
                         }
                     });
                     Log.d(TAG, "enter bus: ");
+                    RideNotification.rideNotification(mContext, mContext.getString(R.string.enter_bus));
                     enterBus = true;
                     tStart = System.currentTimeMillis();
                 }
                 if (enterBus && countStation > 0) {
                     enterBus =false;
                     Log.d(TAG, "exit bus: ");
+                    RideNotification.rideNotification(mContext, mContext.getString(R.string.exit_bus));
                     mRideManager.endRide(new Callback<ApiResult<Ride>>() {
                         @Override
                         public void success(ApiResult<Ride> rideApiResult, Response response) {

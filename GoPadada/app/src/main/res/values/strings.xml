@@ -12,5 +12,7 @@
     <string name="parse_application_id" translatable="false">Fk0VzYiaOcwOPa7CyMpO1yZrxJzorJCP9QzPKMjV</string>
     <string name="parse_client_id" translatable="false">acv5IpLUE9DiFJSgDPKZMmlG7eLEkqqfJi3wPqkg</string>
     <string name="parse_api_key" translatable="false">CqmgVWIGEpRhL9WeMTygUv9itlhNul2MFby5oWKm</string>
-
+    <string name="notification_title">Transport</string>
+    <string name="enter_bus">Enter Bus</string>
+    <string name="exit_bus">Exit Bus</string>
 </resources>
