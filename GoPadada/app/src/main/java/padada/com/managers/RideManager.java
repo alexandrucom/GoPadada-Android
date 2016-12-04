@@ -32,6 +32,8 @@ public class RideManager {
 	}
 
 	public void getRideHistory(Callback<ApiResult<List<Ride>>> callback) {
-		mPadadaApiClient.getApiService().getRideHistory(mAccountManager.getCustomer().getObjectId(), callback);
+		if(mAccountManager.getCustomer() != null) {
+			mPadadaApiClient.getApiService().getRideHistory(mAccountManager.getCustomer().getObjectId(), callback);
+		}
 	}
 }
