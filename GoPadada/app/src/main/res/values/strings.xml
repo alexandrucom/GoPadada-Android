@@ -13,5 +13,6 @@
     <string name="exit_bus">Exit at: %s</string>
     <string name="vehicle_type">Vehicle type:</string>
     <string name="route_name">Route name:</string>
+    <string name="purchase">PURCHASE</string>
 
 </resources>
