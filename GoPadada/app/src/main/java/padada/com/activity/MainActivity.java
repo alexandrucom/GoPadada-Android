@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		
 		if (RideNotification.ACTION_PUSH.equals(getIntent().getAction())) {
 			Intent intent = new Intent(this, PaimentActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, 567);
 		}
 	}
 
