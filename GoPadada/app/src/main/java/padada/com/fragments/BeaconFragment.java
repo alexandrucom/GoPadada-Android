@@ -16,7 +16,13 @@ import com.onyxbeaconservice.IBeacon;
 import java.util.ArrayList;
 import java.util.List;
 
+import padada.com.dal.ApiResult;
+import padada.com.managers.RideManager;
+import padada.com.model.Ride;
 import padada.com.receivers.ContentReceiver;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
@@ -33,6 +39,7 @@ public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
     private long tEnd = 0;
     private List<IBeacon> beaconList;
     private boolean enterBus;
+    private RideManager mRideManager;
 
     public BeaconFragment() {
         // Required empty public constructor
@@ -57,6 +64,7 @@ public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
         // Initialize content receiver. The SDK was initialized in MainActivity
         if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
         mContentReceiver.setOnyxBeaconsListener(this);
+        mRideManager = new RideManager(getContext());
     }
 
     public void onResume() {
@@ -98,6 +106,17 @@ public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
                 Log.d(TAG, "countTransport: " + countTransport);
                 Log.d(TAG, "countStation: " + countStation);
                 if (countStation == 0) {
+                    mRideManager.startRide(new Callback<ApiResult<Ride>>() {
+                        @Override
+                        public void success(ApiResult<Ride> rideApiResult, Response response) {
+                            Log.d(TAG, "success: enter" + rideApiResult.getResult().getStartedAt());
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.d(TAG, "failure: enter");
+                        }
+                    });
                     Log.d(TAG, "enter bus: ");
                     enterBus = true;
                     tStart = System.currentTimeMillis();
@@ -105,6 +124,17 @@ public class BeaconFragment extends Fragment implements OnyxBeaconsListener {
                 if (enterBus && countStation > 0) {
                     enterBus =false;
                     Log.d(TAG, "exit bus: ");
+                    mRideManager.endRide(new Callback<ApiResult<Ride>>() {
+                        @Override
+                        public void success(ApiResult<Ride> rideApiResult, Response response) {
+                            Log.d(TAG, "success: exit " + rideApiResult.getResult().getEndedAt());
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.d(TAG, "failure: exit");
+                        }
+                    });
                 }
                 if (countTransport > 6) {
                     int seconds = (int) ((tStart / 1000) % 60);
