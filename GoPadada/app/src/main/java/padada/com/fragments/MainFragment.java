@@ -8,11 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import padada.com.R;
+import padada.com.dal.ApiResult;
+import padada.com.dal.PadadaApiClient;
+import padada.com.model.Promotion;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainFragment extends Fragment {
+
+
+	private PadadaApiClient mPadadaApiClient;
+	private List<Promotion> mPromotionList;
+
 	private CircleImageView mCiProfile;
+
 	public MainFragment() {
 		// Required empty public constructor
 	}
@@ -25,6 +39,24 @@ public class MainFragment extends Fragment {
 	}
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mPadadaApiClient = new PadadaApiClient(getActivity());
+
+		mPadadaApiClient.getApiService().getPromotions("3fg3k4", new Callback<ApiResult<List<Promotion>>>() {
+			@Override
+			public void success(ApiResult<List<Promotion>> listApiResult, Response response) {
+				mPromotionList = listApiResult.getResult();
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				error.printStackTrace();
+			}
+		});
+	}
+
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		initViews(view);
