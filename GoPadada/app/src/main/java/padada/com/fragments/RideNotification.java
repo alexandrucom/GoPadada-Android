@@ -16,8 +16,10 @@ import padada.com.activity.MainActivity;
  */
 
 public class RideNotification {
+    public static final String ACTION_PUSH = "ACTION_PUSH";
     public static void rideNotification(Context context, String title, String message) {
         Intent notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.setAction(ACTION_PUSH);
         TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(notificationIntent);

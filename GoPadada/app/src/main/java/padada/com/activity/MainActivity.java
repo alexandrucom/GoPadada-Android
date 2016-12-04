@@ -2,6 +2,7 @@ package padada.com.activity;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -36,6 +37,7 @@ import padada.com.fragments.HistoryFragment;
 import padada.com.fragments.LeaderboardsFragment;
 import padada.com.fragments.MainFragment;
 import padada.com.fragments.RideHandler;
+import padada.com.fragments.RideNotification;
 import padada.com.managers.AccountManager;
 import padada.com.managers.SharedPrefsManager;
 import padada.com.model.Customer;
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		mAccountManager = new AccountManager(this);
 		mSharedPrefsManager = new SharedPrefsManager(this);
 
@@ -95,7 +96,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
 		mContentReceiver.setOnyxBeaconsListener(this);
 		mRideHandler = new RideHandler(this);
-
+		
+		if (RideNotification.ACTION_PUSH.equals(getIntent().getAction())) {
+			Intent intent = new Intent(this, PaimentActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	public void onResume() {
