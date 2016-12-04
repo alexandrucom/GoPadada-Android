@@ -3,9 +3,11 @@ apply plugin: 'realm-android'
 
 buildscript {
     repositories {
+
     }
 
     dependencies {
+
     }
 }
 
@@ -26,7 +28,6 @@ android {
         targetSdkVersion 17
         versionCode 1
         versionName "1.0"
-//         signingConfig signingConfigs.release
         multiDexEnabled = true
     }
 
@@ -50,7 +51,6 @@ dependencies {
 
     compile 'com.onyxbeacon:OnyxBeaconLibrary-release:2.5.1@aar'
 
-    // Optional
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.android.support:design:24.2.1'
@@ -60,5 +60,9 @@ dependencies {
     compile 'com.ibm.mobilefirstplatform.clientsdk.android:push:1.+@aar'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.parse:parse-android:1.13.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
+
+    //ui
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
 }

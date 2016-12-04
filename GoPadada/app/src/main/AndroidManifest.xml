@@ -29,7 +29,6 @@
         android:theme="@style/MyMaterialTheme"
         android:name=".PadadaApp">
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="clientid" android:value="9d0aea579c3ce646183df80d781e765d3d138261" />
         <meta-data android:name="secret" android:value="81a60d745b82cae212c62aa308d294504a88fdd3" />
 

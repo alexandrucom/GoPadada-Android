@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:textColor="@color/textColorPrimary"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         />
 
