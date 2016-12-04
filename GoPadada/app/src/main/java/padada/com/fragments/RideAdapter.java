@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.List;
 
 import padada.com.R;
 import padada.com.model.Ride;
+import padada.com.utils.DateTimeUtils;
 
 /**
  * Created by Vlad on 04.12.2016.
@@ -51,7 +53,11 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         }
 
         private void bindRide(Ride ride) {
-            tvDate.setText(ride.getStartedAt() + "");
+            try {
+                tvDate.setText(DateTimeUtils.getDayOfWeek(ride.getStartedAt()));
+            } catch (ParseException e) {
+
+            }
             tvVehicleType.setText(ride.getVehicleType());
             tvRoute.setText(ride.getRouteName());
         }
