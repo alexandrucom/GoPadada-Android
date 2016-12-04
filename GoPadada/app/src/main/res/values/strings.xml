@@ -11,5 +11,7 @@
     <string name="notification_title">Entered %s</string>
     <string name="enter_bus">Enter at: %s</string>
     <string name="exit_bus">Exit at: %s</string>
+    <string name="vehicle_type">Vehicle type:</string>
+    <string name="route_name">Route name:</string>
 
 </resources>

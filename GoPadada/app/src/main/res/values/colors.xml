@@ -6,5 +6,10 @@
     <color name="theme_third">#FF3600</color>
     <color name="theme_2_main">#00FFB0</color>
     <color name="theme_2_secondary">#00B27B</color>
+    <color name="colorWhile">#fff</color>
+    <color name="colorGray">#d3d3d3</color>
+    <color name="colorBlack">#2d2d2d</color>
+    <color name="colorWhiteGray">#f2f2f2</color>
+    <color name="colorGrayDark">#333333</color>
 
 </resources>

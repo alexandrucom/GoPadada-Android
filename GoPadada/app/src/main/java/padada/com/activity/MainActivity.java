@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 	public static final String TAG = "MainActivity";
 	private static final int REQUEST_FINE_LOCATION = 0;
 
-	private Toolbar toolbar;
 	private TabLayout tabLayout;
 	private ViewPager viewPager;
 	private View mLayout;
@@ -209,15 +207,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 	public void initUI() {
 		setContentView(R.layout.activity_main);
 		mLayout = findViewById(R.id.activity_main);
-
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayUseLogoEnabled(true);
-		getSupportActionBar().setLogo(getResources().getDrawable(R.drawable.app_logo));
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
-
 		setupViewPager(viewPager);
 
 		tabLayout = (TabLayout) findViewById(R.id.tabs);
