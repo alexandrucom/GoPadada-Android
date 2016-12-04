@@ -3,6 +3,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/rl_profile"
         android:background="@drawable/bg_profile"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_profile"
@@ -39,4 +40,10 @@
             android:textColor="@color/colorWhile"
             android:textSize="@dimen/text_size_small" />
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_promotion"
+        android:layout_below="@id/rl_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>
