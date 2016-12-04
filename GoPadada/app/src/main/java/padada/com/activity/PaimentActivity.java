@@ -19,6 +19,7 @@ public class PaimentActivity extends AppCompatActivity {
 		findViewById(R.id.btn_pay).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setResult(RESULT_OK);
 				finish();
 			}
 		});

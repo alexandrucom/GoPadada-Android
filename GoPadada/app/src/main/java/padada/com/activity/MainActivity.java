@@ -266,4 +266,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		viewPager.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						displayLeveUp(2);
+					}
+				});
+			}
+		}, 2000);
+	}
 }
