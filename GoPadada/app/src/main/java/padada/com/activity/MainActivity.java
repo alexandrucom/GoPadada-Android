@@ -24,6 +24,7 @@ import com.onyxbeacon.listeners.OnyxBeaconsListener;
 import com.onyxbeacon.rest.auth.util.AuthData;
 import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
+import com.onyxbeaconservice.Beacon;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
@@ -34,9 +35,8 @@ import padada.com.dal.ApiResult;
 import padada.com.fragments.HistoryFragment;
 import padada.com.fragments.LeaderboardsFragment;
 import padada.com.fragments.MainFragment;
-import padada.com.fragments.RideNotification;
+import padada.com.fragments.RideHandler;
 import padada.com.managers.AccountManager;
-import padada.com.managers.BeaconManager;
 import padada.com.managers.SharedPrefsManager;
 import padada.com.model.Customer;
 import padada.com.receivers.ContentReceiver;
@@ -44,7 +44,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnyxBeaconsListener {
 
 	public static final String TAG = "MainActivity";
 	private static final int REQUEST_FINE_LOCATION = 0;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 	private OnyxBeaconManager mManager;
 	private String CONTENT_INTENT_FILTER;
 	private ContentReceiver mContentReceiver;
+	private RideHandler mRideHandler;
 	private boolean receiverRegistered = false;
 
 	private AccountManager mAccountManager;
@@ -90,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		registerForOnyxContent();
 		enableLocation();
 
-		if (mContentReceiver == null) {
-			mContentReceiver = ContentReceiver.getInstance();
-		}
-		mContentReceiver.setBeaconProximityListener(mBeaconProximityListener);
+		// Initialize content receiver. The SDK was initialized in MainActivity
+		if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
+		mContentReceiver.setOnyxBeaconsListener(this);
+		mRideHandler = new RideHandler(this);
 
 	}
 
@@ -208,11 +209,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		setContentView(R.layout.activity_main);
 		mLayout = findViewById(R.id.activity_main);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
+		viewPager.setOffscreenPageLimit(1);
 		setupViewPager(viewPager);
 
 		tabLayout = (TabLayout) findViewById(R.id.tabs);
 		tabLayout.setupWithViewPager(viewPager);
-
 	}
 
 	class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -244,12 +245,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 		}
 	}
 
-	BeaconManager.BeaconProximityListener mBeaconProximityListener = new BeaconManager.BeaconProximityListener() {
-		@Override
-		public void onStateChanged(BeaconManager.CustomerState customerState) {
-			Log.i(TAG, "onStateChanged: " + customerState.name());
-//			RideNotification.rideNotification(MainActivity.this, );
-		}
-	};
+	@Override
+	public void didRangeBeaconsInRegion(final List<Beacon> beacons) {
+		mRideHandler.rideHandler(beacons);
+	}
 
 }
