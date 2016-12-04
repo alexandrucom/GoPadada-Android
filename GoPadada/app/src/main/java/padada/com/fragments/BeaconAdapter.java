@@ -18,8 +18,6 @@ import java.util.List;
 
 import padada.com.R;
 
-
-
 class BeaconAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<Beacon> mBeaconList = new ArrayList<Beacon>();
