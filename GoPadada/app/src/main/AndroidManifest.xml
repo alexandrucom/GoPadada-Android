@@ -35,9 +35,7 @@
             android:name="secret"
             android:value="81a60d745b82cae212c62aa308d294504a88fdd3"/>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="padada.com.activity.MainActivity"

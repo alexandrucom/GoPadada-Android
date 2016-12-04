@@ -65,6 +65,9 @@ public class RideHandler {
                     mRideManager.startRide(new Callback<ApiResult<Ride>>() {
                         @Override
                         public void success(ApiResult<Ride> rideApiResult, Response response) {
+                            RideNotification.rideNotification(mContext,
+                                    mContext.getString(R.string.notification_title, rideApiResult.getResult().getVehicleType()),
+                                    mContext.getString(R.string.enter_bus, rideApiResult.getResult().getRouteName()));
                             Log.d(TAG, "success: enter" + rideApiResult.getResult().getStartedAt());
                         }
 
@@ -74,18 +77,19 @@ public class RideHandler {
                         }
                     });
                     Log.d(TAG, "enter bus: ");
-                    RideNotification.rideNotification(mContext, mContext.getString(R.string.enter_bus));
                     enterBus = true;
                     tStart = System.currentTimeMillis();
                 }
                 if (enterBus && countStation > 0) {
                     enterBus =false;
                     Log.d(TAG, "exit bus: ");
-                    RideNotification.rideNotification(mContext, mContext.getString(R.string.exit_bus));
+
                     mRideManager.endRide(new Callback<ApiResult<Ride>>() {
                         @Override
                         public void success(ApiResult<Ride> rideApiResult, Response response) {
-                            Log.d(TAG, "success: exit " + rideApiResult.getResult().getEndedAt());
+                            RideNotification.rideNotification(mContext,
+                                    mContext.getString(R.string.notification_title, rideApiResult.getResult().getVehicleType()),
+                                    mContext.getString(R.string.exit_bus, rideApiResult.getResult().getRouteName()));
                         }
 
                         @Override

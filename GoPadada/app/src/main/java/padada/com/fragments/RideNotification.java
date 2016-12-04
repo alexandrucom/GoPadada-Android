@@ -16,7 +16,7 @@ import padada.com.activity.MainActivity;
  */
 
 public class RideNotification {
-    public static void rideNotification(Context context, String message) {
+    public static void rideNotification(Context context, String title, String message) {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);
@@ -25,7 +25,7 @@ public class RideNotification {
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
-        Notification notification = builder.setContentTitle(context.getString(R.string.notification_title))
+        Notification notification = builder.setContentTitle(title)
                 .setContentText(message)
                 .setTicker("New Message Alert!")
                 .setSmallIcon(R.mipmap.ic_launcher)
