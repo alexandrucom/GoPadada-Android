@@ -10,7 +10,7 @@
         android:id="@+id/iv_logo"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_default"
-        android:src="@drawable/ic_app_logo"
+        android:src="@drawable/padada_transparent"
         android:layout_width="@dimen/app_logo_dim"
         android:layout_height="@dimen/app_logo_dim" />
 

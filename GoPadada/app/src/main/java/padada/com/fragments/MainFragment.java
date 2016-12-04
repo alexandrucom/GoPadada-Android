@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import padada.com.R;
 import padada.com.dal.ApiResult;
 import padada.com.dal.PadadaApiClient;
@@ -23,6 +24,8 @@ public class MainFragment extends Fragment {
 
 	private PadadaApiClient mPadadaApiClient;
 	private List<Promotion> mPromotionList;
+
+	private CircleImageView mCiProfile;
 
 	public MainFragment() {
 		// Required empty public constructor
@@ -52,5 +55,14 @@ public class MainFragment extends Fragment {
 				error.printStackTrace();
 			}
 		});
+	}
+
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		initViews(view);
+	}
+
+	private void initViews(View view) {
+		mCiProfile = (CircleImageView) view.findViewById(R.id.ci_profile);
 	}
 }
