@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.onyxbeacon.OnyxBeaconApplication;
@@ -32,7 +31,9 @@ import java.util.List;
 
 import padada.com.R;
 import padada.com.dal.ApiResult;
-import padada.com.fragments.BeaconFragment;
+import padada.com.fragments.HistoryFragment;
+import padada.com.fragments.LeaderboardsFragment;
+import padada.com.fragments.MainFragment;
 import padada.com.managers.AccountManager;
 import padada.com.managers.SharedPrefsManager;
 import padada.com.model.Customer;
@@ -43,216 +44,205 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    public static final String TAG = "MainActivity";
-    private static final int REQUEST_FINE_LOCATION = 0;
+	public static final String TAG = "MainActivity";
+	private static final int REQUEST_FINE_LOCATION = 0;
 
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private View mLayout;
+	private Toolbar toolbar;
+	private TabLayout tabLayout;
+	private ViewPager viewPager;
+	private View mLayout;
 
-    private OnyxBeaconManager mManager;
-    private String CONTENT_INTENT_FILTER;
-    private ContentReceiver mContentReceiver;
-    private boolean receiverRegistered = false;
+	private OnyxBeaconManager mManager;
+	private String CONTENT_INTENT_FILTER;
+	private ContentReceiver mContentReceiver;
+	private boolean receiverRegistered = false;
 
-    private AccountManager mAccountManager;
-    private SharedPrefsManager mSharedPrefsManager;
+	private AccountManager mAccountManager;
+	private SharedPrefsManager mSharedPrefsManager;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        mAccountManager = new AccountManager(this);
-        mSharedPrefsManager = new SharedPrefsManager(this);
+		mAccountManager = new AccountManager(this);
+		mSharedPrefsManager = new SharedPrefsManager(this);
 
-        if(mAccountManager.getCustomer() == null) {
-            try {
-                mAccountManager.registerCustomer(new Callback<ApiResult<Customer>>() {
-                    @Override
-                    public void success(ApiResult<Customer> apiResult, Response response) {
-                        Log.i(TAG, "success: " + apiResult.getResult().getObjectId());
-                        mSharedPrefsManager.saveCustomer(apiResult.getResult());
-                    }
+		if (mAccountManager.getCustomer() == null) {
+			try {
+				mAccountManager.registerCustomer(new Callback<ApiResult<Customer>>() {
+					@Override
+					public void success(ApiResult<Customer> apiResult, Response response) {
+						Log.i(TAG, "success: " + apiResult.getResult().getObjectId());
+						mSharedPrefsManager.saveCustomer(apiResult.getResult());
+					}
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        error.printStackTrace();
-                    }
-                });
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+					@Override
+					public void failure(RetrofitError error) {
+						error.printStackTrace();
+					}
+				});
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 
-        initUI();
-        registerForOnyxContent();
-        enableLocation();
-    }
+		initUI();
+		registerForOnyxContent();
+		enableLocation();
+	}
 
-    public void onResume() {
-        super.onResume();
-        if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
+	public void onResume() {
+		super.onResume();
+		if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
 
-        registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
-        receiverRegistered = true;
+		registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
+		receiverRegistered = true;
 
 
-        if (BluetoothAdapter.getDefaultAdapter() == null) {
-            Snackbar.make(mLayout, "Device does not support Bluetooth", Snackbar.LENGTH_SHORT).show();
-        } else {
-            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                Snackbar.make(mLayout, "Please turn on bluetooth", Snackbar.LENGTH_SHORT).show();
-            } else {
-                mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
-                mManager.setForegroundMode(true);
-            }
-        }
-    }
+		if (BluetoothAdapter.getDefaultAdapter() == null) {
+			Snackbar.make(mLayout, "Device does not support Bluetooth", Snackbar.LENGTH_SHORT).show();
+		} else {
+			if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+				Snackbar.make(mLayout, "Please turn on bluetooth", Snackbar.LENGTH_SHORT).show();
+			} else {
+				mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
+				mManager.setForegroundMode(true);
+			}
+		}
+	}
 
-    public void enableLocation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            android.util.Log.i(TAG, "Checking location permission.");
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestLocationPermission();
-            }
-        }
-        mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
-        mManager.setDebugMode(LoggingStrategy.DEBUG);
-        mManager.setAPIEndpoint("https://connect.onyxbeacon.com");
-        mManager.setCouponEnabled(true);
-        mManager.setAPIContentEnabled(true);
-        mManager.enableGeofencing(true);
-        mManager.setLocationTrackingEnabled(true);
-        AuthData authData = new AuthData();
-        authData.setAuthenticationMode(AuthenticationMode.CLIENT_SECRET_BASED);
-        authData.setClientId("9d0aea579c3ce646183df80d781e765d3d138261");
-        authData.setSecret("81a60d745b82cae212c62aa308d294504a88fdd3");
-        mManager.setAuthData(authData);
-    }
+	public void enableLocation() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			android.util.Log.i(TAG, "Checking location permission.");
+			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+				requestLocationPermission();
+			}
+		}
+		mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
+		mManager.setDebugMode(LoggingStrategy.DEBUG);
+		mManager.setAPIEndpoint("https://connect.onyxbeacon.com");
+		mManager.setCouponEnabled(true);
+		mManager.setAPIContentEnabled(true);
+		mManager.enableGeofencing(true);
+		mManager.setLocationTrackingEnabled(true);
+		AuthData authData = new AuthData();
+		authData.setAuthenticationMode(AuthenticationMode.CLIENT_SECRET_BASED);
+		authData.setClientId("9d0aea579c3ce646183df80d781e765d3d138261");
+		authData.setSecret("81a60d745b82cae212c62aa308d294504a88fdd3");
+		mManager.setAuthData(authData);
+	}
 
-    private void requestLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
+	private void requestLocationPermission() {
+		if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+				Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            Snackbar.make(mLayout, "Location permission are needed to enable location",
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
-                        }
-                    })
-                    .show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
-        }
-    }
+			Snackbar.make(mLayout, "Location permission are needed to enable location",
+					Snackbar.LENGTH_INDEFINITE)
+					.setAction("OK", new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+						}
+					})
+					.show();
+		} else {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+		}
+	}
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BeaconFragment(), "Beacons");
-        viewPager.setAdapter(adapter);
-    }
+	private void setupViewPager(ViewPager viewPager) {
+		ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new HistoryFragment(), "Rides");
+        adapter.addFragment(new MainFragment(), "Profile");
+        adapter.addFragment(new LeaderboardsFragment(), "Leaderboard");
+		viewPager.setAdapter(adapter);
+	}
 
-    public void onPause() {
-        super.onPause();
-        mManager.setForegroundMode(false);
+	public void onPause() {
+		super.onPause();
+		mManager.setForegroundMode(false);
 
-        if (receiverRegistered) {
-            unregisterReceiver(mContentReceiver);
-            receiverRegistered = false;
-        }
-    }
+		if (receiverRegistered) {
+			unregisterReceiver(mContentReceiver);
+			receiverRegistered = false;
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_bluetooth:
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_FINE_LOCATION: {
+				for (int i = 0; i < permissions.length; i++) {
+					if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+						android.util.Log.i(TAG, "LOCATION permission has now been granted.");
+						Snackbar.make(mLayout, "Location Permission has been granted.", Snackbar.LENGTH_SHORT).show();
+					} else {
+						android.util.Log.i(TAG, "LOCATION permission was NOT granted.");
+						Snackbar.make(mLayout, "Permissions were not granted", Snackbar.LENGTH_SHORT).show();
 
-        switch (requestCode) {
-            case REQUEST_FINE_LOCATION: {
-                // Check if the only required permission has been granted
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        // Location permission has been granted, preview can be displayed
-                        android.util.Log.i(TAG, "LOCATION permission has now been granted.");
-                        Snackbar.make(mLayout, "Location Permission has been granted.",
-                                Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        android.util.Log.i(TAG, "LOCATION permission was NOT granted.");
-                        Snackbar.make(mLayout, "Permissions were not granted",
-                                Snackbar.LENGTH_SHORT).show();
+					}
+				}
+			}
+			break;
+			default: {
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+			}
+		}
+	}
 
-                    }
-                }
-            }
-            break;
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
-    }
+	public void registerForOnyxContent() {
+		CONTENT_INTENT_FILTER = getPackageName() + ".content";
+		registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
+		receiverRegistered = true;
+	}
 
-    public void registerForOnyxContent() {
-        CONTENT_INTENT_FILTER = getPackageName() + ".content";
-        registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
-        receiverRegistered = true;
+	public void initUI() {
+		setContentView(R.layout.activity_main);
+		mLayout = findViewById(R.id.activity_main);
 
-    }
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayUseLogoEnabled(true);
+		getSupportActionBar().setLogo(getResources().getDrawable(R.drawable.app_logo));
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    public void initUI() {
-        setContentView(R.layout.activity_main);
-        mLayout = findViewById(R.id.activity_main);
+		viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+		setupViewPager(viewPager);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+		tabLayout = (TabLayout) findViewById(R.id.tabs);
+		tabLayout.setupWithViewPager(viewPager);
 
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-    }
+	}
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+	class ViewPagerAdapter extends FragmentPagerAdapter {
+		private final List<Fragment> mFragmentList = new ArrayList<>();
+		private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
+		public ViewPagerAdapter(FragmentManager manager) {
+			super(manager);
+		}
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
+		@Override
+		public Fragment getItem(int position) {
+			return mFragmentList.get(position);
+		}
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+		@Override
+		public int getCount() {
+			return mFragmentList.size();
+		}
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
+		public void addFragment(Fragment fragment, String title) {
+			mFragmentList.add(fragment);
+			mFragmentTitleList.add(title);
+		}
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mFragmentTitleList.get(position);
+		}
+	}
+
 }
