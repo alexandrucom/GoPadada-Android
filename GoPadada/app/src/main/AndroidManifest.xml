@@ -1,77 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="padada.com">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="padada.com">
 
-    <uses-sdk tools:overrideLibrary="com.onyxbeacon"
+    <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="23"
+        tools:overrideLibrary="com.onyxbeacon"/>
 
-    <!-- Push notification permission -->
-    <permission android:name="padada.com.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
-    <!-- Push permission -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <permission
+        android:name="padada.com.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
     <application
-        tools:replace="android:icon"
+        android:name=".PadadaApp"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MyMaterialTheme"
-        android:name=".PadadaApp">
+        tools:replace="android:icon">
 
-        <meta-data android:name="clientid" android:value="9d0aea579c3ce646183df80d781e765d3d138261" />
-        <meta-data android:name="secret" android:value="81a60d745b82cae212c62aa308d294504a88fdd3" />
+        <meta-data
+            android:name="clientid"
+            android:value="9d0aea579c3ce646183df80d781e765d3d138261"/>
+        <meta-data
+            android:name="secret"
+            android:value="81a60d745b82cae212c62aa308d294504a88fdd3"/>
 
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name="padada.com.activity.MainActivity"
             android:screenOrientation="portrait">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <intent-filter>
-                <action android:name="padada.com.IBMPushNotification" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="padada.com.IBMPushNotification"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
         </activity>
 
         <receiver android:name="padada.com.receivers.ContentReceiver">
             <intent-filter>
-                <action android:name="padada.com.content" />
+                <action android:name="padada.com.content"/>
             </intent-filter>
         </receiver>
 
         <provider
-            android:authorities="padada.com.provider"
             android:name="com.onyxbeaconservice.provider.IBeaconProvider"
+            android:authorities="padada.com.provider"
             android:enabled="true"
             android:exported="true"/>
-        <!-- Add GCM Intent Service and intent-filters for RECEIVE and REGISTRATION of notifications -->
-        <service android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushIntentService" />
+        <service android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushIntentService"/>
 
         <receiver
             android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
-        <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
 
-            <category android:name="com.ibm.mobilefirstplatform.clientsdk.android.app" />
-        </intent-filter>
+                <category android:name="com.ibm.mobilefirstplatform.clientsdk.android.app"/>
+            </intent-filter>
         </receiver>
 
     </application>

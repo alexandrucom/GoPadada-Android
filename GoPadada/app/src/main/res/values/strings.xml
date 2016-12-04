@@ -6,6 +6,8 @@
     <string name="parse_client_id" translatable="false">acv5IpLUE9DiFJSgDPKZMmlG7eLEkqqfJi3wPqkg</string>
     <string name="parse_api_key" translatable="false">CqmgVWIGEpRhL9WeMTygUv9itlhNul2MFby5oWKm</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
