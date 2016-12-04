@@ -2,6 +2,8 @@ package padada.com.managers;
 
 import android.content.Context;
 
+import java.util.List;
+
 import padada.com.dal.ApiResult;
 import padada.com.dal.PadadaApiClient;
 import padada.com.model.Ride;
@@ -24,8 +26,12 @@ public class RideManager {
 	public void startRide(Callback<ApiResult<Ride>> callback) {
 		mPadadaApiClient.getApiService().startRide(mAccountManager.getCustomer().getObjectId(), callback);
 	}
-	
+
 	public void endRide(Callback<ApiResult<Ride>> callback) {
 		mPadadaApiClient.getApiService().endRide(mAccountManager.getCustomer().getObjectId(), callback);
+	}
+
+	public void getRideHistory(Callback<ApiResult<List<Ride>>> callback) {
+		mPadadaApiClient.getApiService().getRideHistory(mAccountManager.getCustomer().getObjectId(), callback);
 	}
 }
