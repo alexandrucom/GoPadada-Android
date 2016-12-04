@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,43 +25,94 @@ import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.rest.auth.util.AuthData;
 import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
+import com.parse.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import padada.com.R;
+import padada.com.dal.ApiResult;
 import padada.com.fragments.BeaconFragment;
+import padada.com.managers.AccountManager;
+import padada.com.managers.SharedPrefsManager;
+import padada.com.model.Customer;
 import padada.com.receivers.ContentReceiver;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity implements
-        ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+
     public static final String TAG = "MainActivity";
     private static final int REQUEST_FINE_LOCATION = 0;
-    //Misc
-    // This is the project number you got from the API Console
+
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
-    /**
-     * Root of the layout of this Activity.
-     */
     private View mLayout;
-    // OnyxBeacon SDK
+
     private OnyxBeaconManager mManager;
     private String CONTENT_INTENT_FILTER;
     private ContentReceiver mContentReceiver;
     private boolean receiverRegistered = false;
 
-    /**
-     * Called when the 'show camera' button is clicked.
-     * Callback is defined in resource layout definition.
-     */
+    private AccountManager mAccountManager;
+    private SharedPrefsManager mSharedPrefsManager;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mAccountManager = new AccountManager(this);
+        mSharedPrefsManager = new SharedPrefsManager(this);
+
+        if(mAccountManager.getCustomer() == null) {
+            try {
+                mAccountManager.registerCustomer(new Callback<ApiResult<Customer>>() {
+                    @Override
+                    public void success(ApiResult<Customer> apiResult, Response response) {
+                        Log.i(TAG, "success: " + apiResult.getResult().getObjectId());
+                        mSharedPrefsManager.saveCustomer(apiResult.getResult());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        error.printStackTrace();
+                    }
+                });
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        initUI();
+        registerForOnyxContent();
+        enableLocation();
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
+
+        registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
+        receiverRegistered = true;
+
+
+        if (BluetoothAdapter.getDefaultAdapter() == null) {
+            Snackbar.make(mLayout, "Device does not support Bluetooth", Snackbar.LENGTH_SHORT).show();
+        } else {
+            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                Snackbar.make(mLayout, "Please turn on bluetooth", Snackbar.LENGTH_SHORT).show();
+            } else {
+                mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
+                mManager.setForegroundMode(true);
+            }
+        }
+    }
+
     public void enableLocation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             android.util.Log.i(TAG, "Checking location permission.");
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestLocationPermission();
             }
         }
@@ -78,14 +130,7 @@ public class MainActivity extends AppCompatActivity implements
         mManager.setAuthData(authData);
     }
 
-    /**
-     * Requests the Location permission.
-     * If the permission has been denied previously, a SnackBar will prompt the user to grant the
-     * permission, otherwise it is requested directly.
-     */
-
     private void requestLocationPermission() {
-        // BEGIN_INCLUDE(location_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -94,32 +139,13 @@ public class MainActivity extends AppCompatActivity implements
                     .setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ActivityCompat.requestPermissions(MainActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_FINE_LOCATION);
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
                         }
                     })
                     .show();
         } else {
-
-            // Location permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_FINE_LOCATION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
         }
-    }
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Initialize UI tabs
-        initUI();
-
-        //mManager.sendGenericUserProfile(socialProfile);
-        // Register for Onyx content
-        registerForOnyxContent();
-
-        // Initialize OnyxBeaconManager
-        enableLocation();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -128,32 +154,8 @@ public class MainActivity extends AppCompatActivity implements
         viewPager.setAdapter(adapter);
     }
 
-    public void onResume() {
-        super.onResume();
-        if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
-
-        registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
-        receiverRegistered = true;
-
-
-        if (BluetoothAdapter.getDefaultAdapter() == null) {
-            Snackbar.make(mLayout, "Device does not support Bluetooth",
-                    Snackbar.LENGTH_SHORT).show();
-        } else {
-            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                Snackbar.make(mLayout, "Please turn on bluetooth",
-                        Snackbar.LENGTH_SHORT).show();
-            } else {
-                // Enable scanner in foreground mode and register receiver
-                mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
-                mManager.setForegroundMode(true);
-            }
-        }
-    }
-
     public void onPause() {
         super.onPause();
-        // Set scanner in background mode
         mManager.setForegroundMode(false);
 
         if (receiverRegistered) {
@@ -162,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    /* Enable bluetooth button */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

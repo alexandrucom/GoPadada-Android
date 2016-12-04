@@ -7,4 +7,10 @@
     <string name="onyx_service_notification_title">Stay connected from app test</string>
     <string name="onyx_service_notification_description">Looking for nearby beacons from app test</string>
     <string name="provider_authority">.res-auto.IBeaconProvider</string>
+
+
+    <string name="parse_application_id" translatable="false">Fk0VzYiaOcwOPa7CyMpO1yZrxJzorJCP9QzPKMjV</string>
+    <string name="parse_client_id" translatable="false">acv5IpLUE9DiFJSgDPKZMmlG7eLEkqqfJi3wPqkg</string>
+    <string name="parse_api_key" translatable="false">CqmgVWIGEpRhL9WeMTygUv9itlhNul2MFby5oWKm</string>
+
 </resources>
