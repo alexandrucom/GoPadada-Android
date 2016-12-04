@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import padada.com.R;
@@ -94,6 +95,13 @@ public class PadadaApiClient {
 		void endRide(
 				@Field("customerId") String customerId,
 				Callback<ApiResult<Ride>> callback
+		);
+
+		@FormUrlEncoded
+		@POST("/1/functions/getRidesHistory")
+		void getRideHistory(
+				@Field("customerId") String customerId,
+				Callback<ApiResult<List<Ride>>> callback
 		);
 
 	}
